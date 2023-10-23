@@ -27,13 +27,21 @@ public class Unit : MonoBehaviour
             transform.position += _moveDirection * moveSpeed * Time.deltaTime;
         }
         
-        if (Input.GetKeyDown(KeyCode.T))
-        { 
-            Move(new Vector3(4, 0, 4));
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{ 
+        //    Move(new Vector3(4, 0, 4));
+        //}
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("Fareye basti");
+            Debug.Log("konum : " + MouseWorld.GetPosition());
+            Move(MouseWorld.GetPosition());
         }
+            
     }
     private void Move(Vector3 targetPosition)
     {
         _targetPosition = targetPosition;
+       // _targetPosition = new Vector3(_targetPosition.x, 0, _targetPosition.z);
     }
 }

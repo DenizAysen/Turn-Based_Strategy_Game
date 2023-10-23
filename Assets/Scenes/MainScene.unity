@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 952002569}
   - component: {fileID: 952002568}
   - component: {fileID: 952002567}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -464,7 +464,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1673970434}
   - component: {fileID: 1673970435}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: MouseWorld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
