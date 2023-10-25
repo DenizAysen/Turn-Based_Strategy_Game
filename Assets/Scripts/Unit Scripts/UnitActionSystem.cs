@@ -1,9 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitActionSystem : MonoBehaviour
 {
+    #region Singleton
+    public static UnitActionSystem Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
+    } 
+    #endregion
+
+    public event EventHandler OnSelectedUnitChanged;
+
     #region Serialized Fields
 
     [SerializeField] private Unit selectedUnit;
@@ -26,11 +44,21 @@ public class UnitActionSystem : MonoBehaviour
         {
             if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
             {
-                selectedUnit = unit;
+                SetSelectedUnit(unit);
                 return true;
             }
         }
 
         return false;
+    }
+
+    private void SetSelectedUnit(Unit unit)
+    {
+        selectedUnit = unit;
+        OnSelectedUnitChanged?.Invoke(this,EventArgs.Empty);
+    }
+    public Unit GetSelectedUnit()
+    {
+        return selectedUnit;
     }
 }
