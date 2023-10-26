@@ -9,6 +9,10 @@ public class GridDebugObject : MonoBehaviour
     public void SetGridObject(GridObject gridObject)
     {
         _gridObject = gridObject;
-        positionText.text = gridObject.ToString();
+        positionText.text = _gridObject.ToString();
+    }
+    private void Update()
+    {
+        positionText.text = _gridObject.ToString();
     }
 }
