@@ -366,6 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9af6599239bd845a8d4c2919d00c23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unit: {fileID: 1871815293}
 --- !u!4 &700830305
 Transform:
   m_ObjectHideFlags: 0
@@ -1032,6 +1033,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9073775984384092623, guid: ab73994ba649da44b8b09232452d4780,
+        type: 3}
+      propertyPath: maxMoveDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9073775984384092623, guid: ab73994ba649da44b8b09232452d4780,
+        type: 3}
+      propertyPath: stoppingDistance
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab73994ba649da44b8b09232452d4780, type: 3}

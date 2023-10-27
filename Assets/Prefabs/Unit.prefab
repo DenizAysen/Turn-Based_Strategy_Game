@@ -170,8 +170,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe2e89da997bb574a9838bf01b03f6de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stoppingDistance: 0
+  stoppingDistance: 0.1
   unitAnimator: {fileID: 8055007453990122552}
+  maxMoveDistance: 1
 --- !u!1001 &7970649267472505440
 PrefabInstance:
   m_ObjectHideFlags: 0

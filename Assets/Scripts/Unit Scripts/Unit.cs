@@ -5,10 +5,8 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     #region Privates  
-
     private GridPosition _gridPosition;
     private MoveAction _moveAction;
-
     #endregion
 
     private void Awake()
@@ -33,5 +31,9 @@ public class Unit : MonoBehaviour
     public MoveAction GetMoveAction()
     {
         return _moveAction;
+    }
+    public GridPosition GetGridPosition()
+    {
+        return _gridPosition;
     }
 }

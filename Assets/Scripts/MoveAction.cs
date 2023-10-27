@@ -8,19 +8,21 @@ public class MoveAction : MonoBehaviour
 
     [SerializeField] private float stoppingDistance;
     [SerializeField] private Animator unitAnimator;
-
+    [SerializeField] private int maxMoveDistance = 5;
     #endregion
 
     #region Privates
 
     private Vector3 _targetPosition;
     private Vector3 _moveDirection;
-    private float _rotateSpeed = 10f; 
-
+    private float _rotateSpeed = 10f;
+    private GridPosition _offsetGridPos;
+    private Unit _unit;
     #endregion
     private void Awake()
     {
         _targetPosition = transform.position;
+        _unit = GetComponent<Unit>();
     }
 
     private void Update()
@@ -40,5 +42,21 @@ public class MoveAction : MonoBehaviour
     {
         _targetPosition = targetPosition;
     }
+    public List<GridPosition> GetValidActionGridPositionList()
+    {
+        List<GridPosition> validGridPositionList = new List<GridPosition>();
 
+        GridPosition unitGridPosition = _unit.GetGridPosition();
+
+        for (int x = -maxMoveDistance; x < maxMoveDistance; x++)
+        {
+            for (int z = -maxMoveDistance; z < maxMoveDistance; z++)
+            {
+                _offsetGridPos = new GridPosition(x, z);
+                GridPosition testGridPosition = unitGridPosition + _offsetGridPos;
+                Debug.Log(testGridPosition);
+            }
+        }
+        return validGridPositionList;
+    }
 }
