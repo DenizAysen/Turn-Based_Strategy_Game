@@ -38,9 +38,14 @@ public class MoveAction : MonoBehaviour
         else
             unitAnimator.SetBool("IsWalking", false);
     }
-    public void Move(Vector3 targetPosition)
+    public void Move(GridPosition gridPosition)
     {
-        _targetPosition = targetPosition;
+        _targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+    }
+    public bool IsValidActionGridPosition(GridPosition gridPosition)
+    {
+        List<GridPosition> validGridPositions = GetValidActionGridPositionList();
+        return validGridPositions.Contains(gridPosition);
     }
     public List<GridPosition> GetValidActionGridPositionList()
     {
@@ -48,12 +53,23 @@ public class MoveAction : MonoBehaviour
 
         GridPosition unitGridPosition = _unit.GetGridPosition();
 
-        for (int x = -maxMoveDistance; x < maxMoveDistance; x++)
+        for (int x = -maxMoveDistance; x <= maxMoveDistance; x++)
         {
-            for (int z = -maxMoveDistance; z < maxMoveDistance; z++)
+            for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
             {
                 _offsetGridPos = new GridPosition(x, z);
                 GridPosition testGridPosition = unitGridPosition + _offsetGridPos;
+
+                if (!(LevelGrid.Instance.IsValidGridPosition(testGridPosition))) 
+                    continue;
+
+                if (unitGridPosition == testGridPosition)
+                    continue;
+
+                if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                    continue;
+
+                validGridPositionList.Add(testGridPosition);
                 Debug.Log(testGridPosition);
             }
         }
