@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveAction : MonoBehaviour
+public class MoveAction : BaseAction
 {
     #region Serialized Fields
 
@@ -17,16 +17,19 @@ public class MoveAction : MonoBehaviour
     private Vector3 _moveDirection;
     private float _rotateSpeed = 10f;
     private GridPosition _offsetGridPos;
-    private Unit _unit;
+    
     #endregion
-    private void Awake()
+    protected override void Awake()
     {
         _targetPosition = transform.position;
-        _unit = GetComponent<Unit>();
+        base.Awake();
     }
 
     private void Update()
     {
+        if (!_isActive)
+            return;
+
         if (Vector3.Distance(transform.position, _targetPosition) > stoppingDistance)
         {
             _moveDirection = (_targetPosition - transform.position).normalized;
@@ -36,11 +39,16 @@ public class MoveAction : MonoBehaviour
             unitAnimator.SetBool("IsWalking", true);
         }
         else
+        {
             unitAnimator.SetBool("IsWalking", false);
+            _isActive = false;
+        }
+            
     }
     public void Move(GridPosition gridPosition)
     {
         _targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+        _isActive = true;
     }
     public bool IsValidActionGridPosition(GridPosition gridPosition)
     {
