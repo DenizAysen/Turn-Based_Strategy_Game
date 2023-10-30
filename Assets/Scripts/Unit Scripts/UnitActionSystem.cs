@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class UnitActionSystem : MonoBehaviour
 {
+    private bool _isBusy;
+
     #region Singleton
     public static UnitActionSystem Instance { get; private set; }
 
@@ -30,7 +32,10 @@ public class UnitActionSystem : MonoBehaviour
 
     private void Update()
     {
-        
+        if (_isBusy)
+        {
+            return;
+        }
         if (Input.GetMouseButtonDown(0))
         {
             if (TryHandleUnitSelection()) return;
@@ -38,13 +43,15 @@ public class UnitActionSystem : MonoBehaviour
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
             if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
             {
-                selectedUnit.GetMoveAction().Move(mouseGridPosition);
+                SetBusy();
+                selectedUnit.GetMoveAction().Move(mouseGridPosition,ClearBusy);
             }
             
         }
         if (Input.GetMouseButtonDown(1))
         {
-            selectedUnit.GetSpinAction().Spin();
+            SetBusy();
+            selectedUnit.GetSpinAction().Spin(ClearBusy);
         }
     }
     private bool TryHandleUnitSelection()
@@ -61,7 +68,14 @@ public class UnitActionSystem : MonoBehaviour
 
         return false;
     }
-
+    private void SetBusy()
+    {
+        _isBusy = true;
+    }
+    private void ClearBusy()
+    {
+        _isBusy = false;
+    }
     private void SetSelectedUnit(Unit unit)
     {
         selectedUnit = unit;
