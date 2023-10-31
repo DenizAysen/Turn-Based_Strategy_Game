@@ -34,7 +34,7 @@ public class GridSystemVisual : MonoBehaviour
                 gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
             }
         }
-        HideAllGridPositions();
+       // HideAllGridPositions();
     }
     public void HideAllGridPositions()
     {
@@ -50,14 +50,15 @@ public class GridSystemVisual : MonoBehaviour
     {
         foreach (GridPosition gridPosition in gridPositions)
         {
+            Debug.Log(gridPosition.ToString());
             gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].Show();
         }
     }
     public void UpdateGridVisual()
     {
         HideAllGridPositions();
-        Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-        ShowGridPositionList(selectedUnit.GetMoveAction().GetValidActionGridPositionList());
+        BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+        ShowGridPositionList(selectedAction.GetValidActionGridPositionList());
     }
     private void Update()
     {

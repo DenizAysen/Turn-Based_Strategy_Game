@@ -24,6 +24,8 @@ public class UnitActionSystem : MonoBehaviour
     #endregion
 
     public event EventHandler OnSelectedUnitChanged;
+    public event EventHandler OnSelectedActionChanged;
+    public event EventHandler<bool> OnBusyChanged;
 
     #region Serialized Fields
 
@@ -63,6 +65,9 @@ public class UnitActionSystem : MonoBehaviour
             {
                 if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
                 {
+                    if (selectedUnit == unit)
+                        return false;
+
                     SetSelectedUnit(unit);
                     return true;
                 }
@@ -88,10 +93,14 @@ public class UnitActionSystem : MonoBehaviour
     private void SetBusy()
     {
         _isBusy = true;
+
+        OnBusyChanged?.Invoke(this, _isBusy);
     }
     private void ClearBusy()
     {
         _isBusy = false;
+
+        OnBusyChanged?.Invoke(this, _isBusy);
     }
     private void SetSelectedUnit(Unit unit)
     {
@@ -104,9 +113,16 @@ public class UnitActionSystem : MonoBehaviour
     public void SetSelectedAction(BaseAction baseAction)
     {
         selectedAction = baseAction;
+
+        OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
     }
     public Unit GetSelectedUnit()
     {
         return selectedUnit;
     }
+    public BaseAction GetSelectedAction()
+    {
+        return selectedAction;
+    }
+
 }

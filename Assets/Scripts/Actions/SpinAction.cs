@@ -34,7 +34,7 @@ public class SpinAction : BaseAction
 
     public override string GetActionName()
     {
-        return "Spin";
+        return "SpIn";
     }
     public override List<GridPosition> GetValidActionGridPositionList()
     {
