@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class UnitActionSystemUI : MonoBehaviour
 {
     [SerializeField] private Transform actionButtonPrefab;
     [SerializeField] private Transform actionButtonContainerTransform;
-    [SerializeField] private ActionBusyUI busyUI;
+    [SerializeField] private TextMeshProUGUI actionPointsText;
 
     private List<ActionButtonUI> actionButtonUIs;
     private void Awake()
@@ -16,13 +17,31 @@ public class UnitActionSystemUI : MonoBehaviour
     }
     private void Start()
     {
-        UnitActionSystem.Instance.OnSelectedUnitChanged += OnSelectedUnitChanged;
-        UnitActionSystem.Instance.OnSelectedActionChanged += OnSelectedActionChanged;
+        SubscribeEvents();
 
         CreateUnitActionButtons();
-
+        UpdateActionPoints();
         UpdateSelectedVisual();
     }
+    private void SubscribeEvents()
+    {
+        UnitActionSystem.Instance.OnSelectedUnitChanged += OnSelectedUnitChanged;
+        UnitActionSystem.Instance.OnSelectedActionChanged += OnSelectedActionChanged;
+        UnitActionSystem.Instance.OnActionStarted += OnActionStarted;
+        TurnSystem.Instance.OnTurnChanged += OnTurnChanged;
+        Unit.OnAnyActionPointsChanged += OnAnyActionPointsChanged;
+    }
+
+    private void OnAnyActionPointsChanged(object sender, EventArgs e)
+    {
+        UpdateActionPoints();
+    }
+
+    private void OnTurnChanged(object sender, EventArgs e)
+    {
+        UpdateActionPoints();
+    }
+
     private void CreateUnitActionButtons()
     {
         foreach (Transform buttonTransform in actionButtonContainerTransform)
@@ -47,10 +66,15 @@ public class UnitActionSystemUI : MonoBehaviour
     {
         CreateUnitActionButtons();
         UpdateSelectedVisual();
+        UpdateActionPoints();
     }
     private void OnSelectedActionChanged(object sender, EventArgs e)
     {
         UpdateSelectedVisual();
+    }
+    private void OnActionStarted(object sender, EventArgs e)
+    {
+        UpdateActionPoints();
     }
     private void UpdateSelectedVisual()
     {
@@ -58,5 +82,10 @@ public class UnitActionSystemUI : MonoBehaviour
         {
             actionButton.UpdateSelectedVisual();
         }
+    }
+    private void UpdateActionPoints()
+    {
+        Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+        actionPointsText.text = "Action Points: " + selectedUnit.GetActionPoints();
     }
 }
