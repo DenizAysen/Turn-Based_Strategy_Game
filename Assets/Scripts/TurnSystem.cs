@@ -8,8 +8,6 @@ public class TurnSystem : MonoBehaviour
     #region Singleton
     public static TurnSystem Instance { get; private set; }
 
-    public EventHandler OnTurnChanged;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -21,16 +19,23 @@ public class TurnSystem : MonoBehaviour
 
     }
     #endregion
+
+    public EventHandler OnTurnChanged;
+
+    #region Privates
     private int _turnNumber = 1;
+    private bool _isPlayerTurn = true; 
+    #endregion
 
     public void NextTurn()
     {
         _turnNumber++;
-
+        _isPlayerTurn = !_isPlayerTurn;
         OnTurnChanged?.Invoke(this, EventArgs.Empty);
     }
     public int GetTurnNumber() 
     {
         return _turnNumber;        
     }
+    public bool IsPlayerTurn() => _isPlayerTurn;
 }

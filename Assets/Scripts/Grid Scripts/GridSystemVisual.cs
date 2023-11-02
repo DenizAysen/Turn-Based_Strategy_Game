@@ -50,7 +50,6 @@ public class GridSystemVisual : MonoBehaviour
     {
         foreach (GridPosition gridPosition in gridPositions)
         {
-            Debug.Log(gridPosition.ToString());
             gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].Show();
         }
     }
