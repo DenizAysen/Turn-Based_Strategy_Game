@@ -16,8 +16,7 @@ public class SpinAction : BaseAction
     }
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        this.onActionComplete = onActionComplete;
-        _isActive = true;
+        ActionStart(onActionComplete);
         totalSpinAmount = 0;
     }
     private void SpinUnit()
@@ -27,8 +26,7 @@ public class SpinAction : BaseAction
         transform.eulerAngles += new Vector3(0, spinAddAmount, 0);
         if (totalSpinAmount >= 360)
         {
-            _isActive = false;
-            onActionComplete();
+            ActionComplete();
         }
     }
 

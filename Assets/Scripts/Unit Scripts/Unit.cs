@@ -72,6 +72,10 @@ public class Unit : MonoBehaviour
     {
         return _gridPosition;
     }
+    public Vector3 GetWorldPosition()
+    {
+        return transform.position;
+    }
     public BaseAction[] GetBaseActions()
     {
         return baseActions;
@@ -102,5 +106,9 @@ public class Unit : MonoBehaviour
         actionPoints -= amount;
 
         OnAnyActionPointsChanged?.Invoke(this,EventArgs.Empty);
+    }
+    public void Damage()
+    {
+        Debug.Log(transform + " damaged!");
     }
 }
