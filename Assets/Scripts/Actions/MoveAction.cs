@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class MoveAction : BaseAction
 {
-    #region Serialized Fields
+    public EventHandler OnStartMoving;
+    public EventHandler OnStopMoving;
 
+    #region Serialized Fields
     [SerializeField] private float stoppingDistance;
-    [SerializeField] private Animator unitAnimator;
     [SerializeField] private int maxMoveDistance = 5;
     #endregion
 
@@ -37,11 +38,12 @@ public class MoveAction : BaseAction
             float moveSpeed = 4f;
             transform.position += _moveDirection * moveSpeed * Time.deltaTime;
             transform.forward = Vector3.Lerp(transform.forward, _moveDirection, Time.deltaTime * _rotateSpeed);
-            unitAnimator.SetBool("IsWalking", true);
+           // unitAnimator;
         }
         else
         {
-            unitAnimator.SetBool("IsWalking", false);
+            //unitAnimator
+            OnStopMoving?.Invoke(this, EventArgs.Empty);
             ActionComplete();
         }
             
@@ -51,6 +53,8 @@ public class MoveAction : BaseAction
         ActionStart(onActionComplete);
 
         _targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+
+        OnStartMoving?.Invoke(this, EventArgs.Empty);
     }
     public override List<GridPosition> GetValidActionGridPositionList()
     {

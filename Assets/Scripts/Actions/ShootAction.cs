@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class ShootAction : BaseAction
 {
+    public EventHandler<OnShootEventArgs> OnShoot;
+    public class OnShootEventArgs : EventArgs
+    {
+        public Unit targetUnit;
+        public Unit shootingUnit;
+    }
     private enum States
     {
         Aiming,
@@ -43,8 +49,7 @@ public class ShootAction : BaseAction
                     _canShootBullet = false;
                 }                   
                 break;
-            case States.Cooloff:
-               
+            case States.Cooloff:              
                 break;
         }
         if(_stateTimer <= 0f)
@@ -55,6 +60,7 @@ public class ShootAction : BaseAction
 
     private void Shoot()
     {
+        OnShoot?.Invoke(this, new OnShootEventArgs { targetUnit = _targetUnit , shootingUnit = _unit });
         _targetUnit.Damage();
     }
 
@@ -72,7 +78,7 @@ public class ShootAction : BaseAction
                 float coolOffStateTimer = .5f;
                 _stateTimer = coolOffStateTimer;
                 break;
-            case States.Cooloff:
+            case States.Cooloff:               
                 ActionComplete();
                 break;
         }
@@ -128,5 +134,6 @@ public class ShootAction : BaseAction
         _state = States.Aiming;
         float aimingStateTimer = 1f;
         _stateTimer = aimingStateTimer;
+        _canShootBullet = true;
     }
 }
