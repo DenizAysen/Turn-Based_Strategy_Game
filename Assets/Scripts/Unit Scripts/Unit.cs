@@ -38,7 +38,7 @@ public class Unit : MonoBehaviour
     private void SubscribeEvents()
     {
         TurnSystem.Instance.OnTurnChanged += OnTurnChanged;
-        _healthSystem.onDead += OnDead;
+        _healthSystem.OnDead += OnDead;
     }
 
     private void OnDead(object sender, EventArgs e)

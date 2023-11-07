@@ -19,7 +19,7 @@ public class UnitRagdollSpawner : MonoBehaviour
     }
     private void SubscribeEvents()
     {
-        healthSystem.onDead += OnDead;
+        healthSystem.OnDead += OnDead;
     }
     private void OnDead(object sender, EventArgs e)
     {

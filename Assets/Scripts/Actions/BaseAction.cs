@@ -5,9 +5,12 @@ using UnityEngine;
 
 public abstract class BaseAction : MonoBehaviour
 {
+    public static EventHandler OnAnyActionStarted;
+    public static EventHandler OnAnyActionCompleted;
+
     protected Unit _unit;
     protected bool _isActive;
-    protected Action onActionComplete;
+    protected Action OnActionComplete;
     protected virtual void Awake()
     {
         _unit = GetComponent<Unit>();
@@ -25,14 +28,22 @@ public abstract class BaseAction : MonoBehaviour
     {
         return 1;
     }
-    protected void ActionStart(Action onActionComplete)
+    protected void ActionStart(Action OnActionComplete)
     {
         _isActive = true;
-        this.onActionComplete = onActionComplete;
+        this.OnActionComplete = OnActionComplete;
+
+        OnAnyActionStarted?.Invoke(this, EventArgs.Empty);
     }
     protected void ActionComplete()
     {
         _isActive = false;
-        onActionComplete();
+        OnActionComplete();
+
+        OnAnyActionCompleted?.Invoke(this, EventArgs.Empty);
+    }
+    public Unit GetUnit()
+    {
+        return _unit;
     }
 }
