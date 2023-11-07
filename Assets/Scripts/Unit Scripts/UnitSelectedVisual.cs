@@ -40,4 +40,12 @@ public class UnitSelectedVisual : MonoBehaviour
         else
             _meshRenderer.enabled = false;
     }
+    public void OnDestroy()
+    {
+        UnSubscribeEvents();
+    }
+    private void UnSubscribeEvents()
+    {
+        UnitActionSystem.Instance.OnSelectedUnitChanged -= OnSelectedUnitChanged;
+    }
 }

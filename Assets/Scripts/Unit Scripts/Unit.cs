@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour
     private SpinAction _spinAction;
     private BaseAction[] baseActions;
     private int actionPoints = ACTION_POINTS_MAX;
+    private HealthSystem _healthSystem;
     #endregion
 
     public static EventHandler OnAnyActionPointsChanged;
@@ -24,6 +25,7 @@ public class Unit : MonoBehaviour
         _moveAction = GetComponent<MoveAction>();
         _spinAction = GetComponent<SpinAction>();
         baseActions = GetComponents<BaseAction>();
+        _healthSystem = GetComponent<HealthSystem>();
     }
     private void Start()
     {
@@ -36,7 +38,15 @@ public class Unit : MonoBehaviour
     private void SubscribeEvents()
     {
         TurnSystem.Instance.OnTurnChanged += OnTurnChanged;
+        _healthSystem.onDead += OnDead;
     }
+
+    private void OnDead(object sender, EventArgs e)
+    {
+        LevelGrid.Instance.RemoveUnitAtGridPosition(_gridPosition, this);
+        Destroy(gameObject);
+    }
+
     private void OnTurnChanged(object sender, EventArgs e)
     {
         if((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) || (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
@@ -107,8 +117,8 @@ public class Unit : MonoBehaviour
 
         OnAnyActionPointsChanged?.Invoke(this,EventArgs.Empty);
     }
-    public void Damage()
+    public void Damage(int damageAmount)
     {
-        Debug.Log(transform + " damaged!");
+        _healthSystem.Damage(damageAmount);
     }
 }
