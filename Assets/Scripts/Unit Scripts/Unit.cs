@@ -17,6 +17,8 @@ public class Unit : MonoBehaviour
     #endregion
 
     public static EventHandler OnAnyActionPointsChanged;
+    public static EventHandler OnAnyUnitSpawned;
+    public static EventHandler OnAnyUnitDead;
 
     [SerializeField] private bool isEnemy;
 
@@ -33,6 +35,7 @@ public class Unit : MonoBehaviour
         LevelGrid.Instance.AddUnitAtGridPosition(_gridPosition, this);
 
         SubscribeEvents();
+        OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     private void SubscribeEvents()
@@ -45,6 +48,7 @@ public class Unit : MonoBehaviour
     {
         LevelGrid.Instance.RemoveUnitAtGridPosition(_gridPosition, this);
         Destroy(gameObject);
+        OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnTurnChanged(object sender, EventArgs e)
