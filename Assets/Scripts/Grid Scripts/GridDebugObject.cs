@@ -4,14 +4,13 @@ using UnityEngine;
 using TMPro;
 public class GridDebugObject : MonoBehaviour
 {
-    private GridObject _gridObject;
+    private object _gridObject;
     [SerializeField] private TextMeshPro positionText;
-    public void SetGridObject(GridObject gridObject)
+    public virtual void SetGridObject(object gridObject)
     {
         _gridObject = gridObject;
-        positionText.text = _gridObject.ToString();
     }
-    private void Update()
+    protected virtual void Update()
     {
         positionText.text = _gridObject.ToString();
     }
