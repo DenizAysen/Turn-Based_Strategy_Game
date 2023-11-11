@@ -9,13 +9,13 @@ public class PathNode
     private int _hCost;
     private int _fCost;
     private PathNode _cameFromPathNode;
+    private bool _isWalkable = true;
     public PathNode(GridPosition gridPosition)
     {
         _gridPosition = gridPosition;
     }
     public override string ToString()
-    {
-        
+    {        
         return _gridPosition.ToString();
     }
     #region Get Methods
@@ -57,10 +57,17 @@ public class PathNode
     {
         _cameFromPathNode = pathNode;
     }
+    public void SetIsWalkable(bool isWalkable)
+    {
+        _isWalkable = isWalkable;
+    }
     #endregion
     public void RestCameFromPathNode()
     {
         _cameFromPathNode = null;
     }
-    
+    public bool IsWalkable()
+    {
+        return _isWalkable;
+    }
 }
