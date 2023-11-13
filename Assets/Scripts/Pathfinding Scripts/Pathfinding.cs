@@ -34,7 +34,7 @@ public class Pathfinding : MonoBehaviour
         _cellSize = cellSize;
 
         _gridSystem = new GridSystem<PathNode>(_width, _height, _cellSize, (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
-        _gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+       // _gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
         for (int x = 0; x < _width; x++)
         {
@@ -50,7 +50,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
     }
-    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLenght)
     {
         List<PathNode> openList = new List<PathNode>();
         List<PathNode> closedList = new List<PathNode>();
@@ -83,6 +83,7 @@ public class Pathfinding : MonoBehaviour
 
             if(currentNode == endNode)
             {
+                pathLenght = endNode.GetFCost();
                 return CalculatePath(endNode);
             }
             openList.Remove(currentNode);
@@ -114,7 +115,7 @@ public class Pathfinding : MonoBehaviour
                 }
             }
         }
-
+        pathLenght = 0;
         return null;
     }
     public int CalculateDistance(GridPosition gridPosA, GridPosition gridPosB)
@@ -195,5 +196,18 @@ public class Pathfinding : MonoBehaviour
             gridPositionList.Add(pathNode.GetGridPosition());
         }
         return gridPositionList;
+    }
+    public bool IsWalkableGridPosition(GridPosition gridPosition)
+    {
+        return _gridSystem.GetGridObject(gridPosition).IsWalkable();
+    }
+    public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+        return FindPath(startGridPosition, endGridPosition,out int pathLength) != null;
+    }
+    public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+        FindPath(startGridPosition, endGridPosition, out int pathLength);
+        return pathLength;
     }
 }

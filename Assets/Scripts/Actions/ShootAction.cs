@@ -27,8 +27,9 @@ public class ShootAction : BaseAction
     private bool _canShootBullet;
     private float rotateSpeed = 10f;
     private Vector3 _shootDirection;
+    private float _unitShoulderHeight = 1.7f;
     #endregion
-
+    [SerializeField] private LayerMask obstaclesLayerMask;
     private void Update()
     {
         if (!_isActive)
@@ -118,6 +119,16 @@ public class ShootAction : BaseAction
                 Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
                 if (targetUnit.IsEnemy() == _unit.IsEnemy())
+                {
+                    continue;
+                }
+
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
+                if(Physics.Raycast(unitWorldPosition + Vector3.up * _unitShoulderHeight, 
+                    shootDir,
+                    Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                    obstaclesLayerMask))
                 {
                     continue;
                 }
