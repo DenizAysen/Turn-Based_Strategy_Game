@@ -8,8 +8,8 @@ public class GridObject
 
     private GridSystem<GridObject> _gridSystem;
     private GridPosition _gridPosition;
-    private List<Unit> _unitList; 
-
+    private List<Unit> _unitList;
+    private Door door;
     #endregion
     public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
     {
@@ -49,5 +49,13 @@ public class GridObject
         }
         else
             return null;
+    }
+    public Door GetDoor()
+    {
+        return door;
+    }
+    public void SetDoor(Door door)
+    {
+        this.door = door;
     }
 }
