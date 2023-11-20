@@ -9,7 +9,7 @@ public class GridObject
     private GridSystem<GridObject> _gridSystem;
     private GridPosition _gridPosition;
     private List<Unit> _unitList;
-    private Door door;
+    private IInteractable _interactable;
     #endregion
     public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
     {
@@ -50,12 +50,12 @@ public class GridObject
         else
             return null;
     }
-    public Door GetDoor()
+    public IInteractable GetInteractable()
     {
-        return door;
+        return _interactable;
     }
-    public void SetDoor(Door door)
+    public void SetInteractable(IInteractable interactable)
     {
-        this.door = door;
+        _interactable = interactable;
     }
 }
