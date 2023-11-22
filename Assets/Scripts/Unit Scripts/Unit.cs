@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    private const int ACTION_POINTS_MAX = 9;
+    private const int ACTION_POINTS_MAX = 3;
 
     #region Privates  
     private GridPosition _gridPosition;
@@ -28,6 +28,7 @@ public class Unit : MonoBehaviour
     private void Start()
     {
         _gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        //Debug.Log(_gridPosition);
         LevelGrid.Instance.AddUnitAtGridPosition(_gridPosition, this);
 
         SubscribeEvents();

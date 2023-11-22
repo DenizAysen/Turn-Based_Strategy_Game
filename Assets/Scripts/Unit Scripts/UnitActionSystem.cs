@@ -42,6 +42,7 @@ public class UnitActionSystem : MonoBehaviour
     }
     private void Update()
     {
+        //Debug.Log(LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition()));
         if (_isBusy)
         {
             return;
@@ -119,7 +120,6 @@ public class UnitActionSystem : MonoBehaviour
     private void SetSelectedUnit(Unit unit)
     {
         selectedUnit = unit;
-
         SetSelectedAction(unit.GetAction<MoveAction>());
 
         OnSelectedUnitChanged?.Invoke(this,EventArgs.Empty);

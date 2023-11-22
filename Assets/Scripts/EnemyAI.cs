@@ -30,10 +30,6 @@ public class EnemyAI : MonoBehaviour
         if (!TurnSystem.Instance.IsPlayerTurn())
         {
             _state = State.TakingTurn;
-            if (TryTakeEnemyAIAction(SetStateTakingTurn))
-            {
-
-            }
             _timer = 2f;
         }
     }
