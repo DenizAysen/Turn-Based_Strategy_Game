@@ -43,7 +43,7 @@ public class LevelGrid : MonoBehaviour
     #endregion
     private void Start()
     {
-        Pathfinding.Instance.Setup(_width, _height, _cellSize);
+        Pathfinding.Instance.Setup(_width, _height, _cellSize, floorAmount);
     }
     private GridSystem<GridObject> GetGridSystem(int floor)
     {
@@ -77,7 +77,17 @@ public class LevelGrid : MonoBehaviour
         return GetGridSystem(floor).GetGridPosition(worldPos); 
     }
     public Vector3 GetWorldPosition(GridPosition gridPosition) => GetGridSystem(gridPosition.floor).GetWorldPosition(gridPosition);
-    public bool IsValidGridPosition(GridPosition gridPosition) => GetGridSystem(gridPosition.floor).IsValidGridPosition(gridPosition);
+    public bool IsValidGridPosition(GridPosition gridPosition)
+    {
+        if(gridPosition.floor <0 || gridPosition.floor >= floorAmount)
+        {
+            return false;
+        }
+        else
+        {
+            return GetGridSystem(gridPosition.floor).IsValidGridPosition(gridPosition);
+        }
+    }
     public int GetWidth() => GetGridSystem(0).GetWidth();
     public int GetHeight() => GetGridSystem(0).GetHeight();
     public int GetFloorAmount() => floorAmount;

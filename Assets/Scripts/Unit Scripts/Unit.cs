@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    private const int ACTION_POINTS_MAX = 3;
+    private const int ACTION_POINTS_MAX = 9;
 
     #region Privates  
     private GridPosition _gridPosition;
@@ -87,6 +87,10 @@ public class Unit : MonoBehaviour
     public GridPosition GetGridPosition()
     {
         return _gridPosition;
+    }
+    public void SetGridPosition(GridPosition gridPosition)
+    {
+        _gridPosition = gridPosition;
     }
     public Vector3 GetWorldPosition()
     {

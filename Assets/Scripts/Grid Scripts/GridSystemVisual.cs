@@ -139,6 +139,11 @@ public class GridSystemVisual : MonoBehaviour
     {
         HideAllGridPositions();
         Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+        if(selectedUnit.GetGridPosition() != LevelGrid.Instance.GetGridPosition(selectedUnit.GetWorldPosition()))
+        {
+            //Only works when game starts because of Instance IDS
+            selectedUnit.SetGridPosition(LevelGrid.Instance.GetGridPosition(selectedUnit.GetWorldPosition()));
+        }
         BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
         GridVisualType gridVisualType;
         switch (selectedAction)

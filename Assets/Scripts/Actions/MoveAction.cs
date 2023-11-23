@@ -70,29 +70,32 @@ public class MoveAction : BaseAction
         {
             for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
             {
-                _offsetGridPos = new GridPosition(x, z, 0);
-                GridPosition testGridPosition = unitGridPosition + _offsetGridPos;
+                for (int floor = -maxMoveDistance; floor < maxMoveDistance; floor++)
+                {
+                    _offsetGridPos = new GridPosition(x, z, floor);
+                    GridPosition testGridPosition = unitGridPosition + _offsetGridPos;
 
-                if (!(LevelGrid.Instance.IsValidGridPosition(testGridPosition))) 
-                    continue;
+                    if (!(LevelGrid.Instance.IsValidGridPosition(testGridPosition)))
+                        continue;
 
-                if (unitGridPosition == testGridPosition)
-                    continue;
+                    if (unitGridPosition == testGridPosition)
+                        continue;
 
-                if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
-                    continue;
+                    if (LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
+                        continue;
 
-                if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
-                    continue;
+                    if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                        continue;
 
-                if (!Pathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
-                    continue;
+                    if (!Pathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
+                        continue;
 
-                int pathfindingDistanceMultiplier = 10;
-                if (Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
-                    continue;
+                    int pathfindingDistanceMultiplier = 10;
+                    if (Pathfinding.Instance.GetPathLength(unitGridPosition, testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
+                        continue;
 
-                validGridPositionList.Add(testGridPosition);
+                    validGridPositionList.Add(testGridPosition);
+                }               
             }
         }
         return validGridPositionList;
