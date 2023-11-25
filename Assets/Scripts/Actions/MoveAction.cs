@@ -5,8 +5,16 @@ using UnityEngine;
 
 public class MoveAction : BaseAction
 {
-    public EventHandler OnStartMoving;
-    public EventHandler OnStopMoving;
+    #region EventHandler
+    public event EventHandler OnStartMoving;
+    public event EventHandler OnStopMoving;
+    public event EventHandler<OnChangeFloorsStartedEventArg> OnChangedFloorsStarted;
+    public class OnChangeFloorsStartedEventArg: EventArgs
+    {
+        public GridPosition unitGridPosition;
+        public GridPosition targetGridPosition;
+    }
+    #endregion
 
     #region Serialized Fields
     [SerializeField] private float stoppingDistance;
@@ -18,7 +26,10 @@ public class MoveAction : BaseAction
     private int _currentPositionIndex;
     private Vector3 _moveDirection;
     private float _rotateSpeed = 10f;
-    private GridPosition _offsetGridPos;   
+    private GridPosition _offsetGridPos;
+    private bool isChangingFloors;
+    private float _differentFloorsTeleportTimer;
+    private float _differentFloorsTeleportTimerMax = .5f;
     #endregion
 
     private void Update()
@@ -28,23 +39,53 @@ public class MoveAction : BaseAction
 
         Vector3 _targetPosition = positionList[_currentPositionIndex];
 
-        _moveDirection = (_targetPosition - transform.position).normalized;
-
-        transform.forward = Vector3.Lerp(transform.forward, _moveDirection, Time.deltaTime * _rotateSpeed);
-
-        if (Vector3.Distance(transform.position, _targetPosition) > stoppingDistance)
-        {           
-            float moveSpeed = 4f;
-            transform.position += _moveDirection * moveSpeed * Time.deltaTime;            
+        if (isChangingFloors)
+        {
+            _differentFloorsTeleportTimer -= Time.deltaTime;
+            Vector3 targetSameFloorPosition = _targetPosition;
+            targetSameFloorPosition.y = transform.position.y;
+            Vector3 rotateDirection = (targetSameFloorPosition - transform.position).normalized;
+            transform.forward = Vector3.Slerp(transform.forward, rotateDirection, Time.deltaTime * _rotateSpeed);
+            if (_differentFloorsTeleportTimer <= 0f)
+            {
+                isChangingFloors = false;
+                transform.position = _targetPosition;
+            }
         }
         else
         {
+            
+            _moveDirection = (_targetPosition - transform.position).normalized;
+
+            transform.forward = Vector3.Slerp(transform.forward, _moveDirection, Time.deltaTime * _rotateSpeed);
+
+            float moveSpeed = 4f;
+            transform.position += _moveDirection * moveSpeed * Time.deltaTime;
+        }       
+
+        if (Vector3.Distance(transform.position, _targetPosition) < stoppingDistance)
+        {           
+                      
             _currentPositionIndex++;
             if(_currentPositionIndex >= positionList.Count)
             {
                 OnStopMoving?.Invoke(this, EventArgs.Empty);
                 ActionComplete();
-            }            
+            }
+            else
+            {
+                _targetPosition = positionList[_currentPositionIndex];
+                GridPosition targetGridPostion = LevelGrid.Instance.GetGridPosition(_targetPosition);
+                GridPosition unitGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+
+                if(targetGridPostion.floor != unitGridPosition.floor)
+                {
+                    isChangingFloors = true;
+                    _differentFloorsTeleportTimer = _differentFloorsTeleportTimerMax;
+
+                    OnChangedFloorsStarted?.Invoke(this, new OnChangeFloorsStartedEventArg { unitGridPosition = unitGridPosition, targetGridPosition = targetGridPostion });
+                }
+            }
         }       
     }
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
