@@ -680,7 +680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 320
 --- !u!114 &4317050678883519145
 MonoBehaviour:
   m_ObjectHideFlags: 0
