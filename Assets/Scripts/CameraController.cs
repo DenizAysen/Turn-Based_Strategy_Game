@@ -5,13 +5,26 @@ using Cinemachine;
 public class CameraController : MonoBehaviour
 {
     #region privates
-
     CinemachineTransposer _cinemachineTransposer;
     private Vector3 _targetFollowOffset;
     private const float MIN_FOLLOW_Y_OFFSET = 2f;
-    private const float MAX_FOLLOW_Y_OFFSET = 12f;
+    private const float MAX_FOLLOW_Y_OFFSET = 15f;
     float _zoomSpeed = 5f;
+    #endregion
 
+    #region Singleton
+    public static CameraController Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
+    }
     #endregion
 
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
@@ -55,5 +68,9 @@ public class CameraController : MonoBehaviour
         
         _targetFollowOffset.y = Mathf.Clamp(_targetFollowOffset.y, MIN_FOLLOW_Y_OFFSET, MAX_FOLLOW_Y_OFFSET);
         _cinemachineTransposer.m_FollowOffset = Vector3.Lerp(_cinemachineTransposer.m_FollowOffset, _targetFollowOffset, Time.deltaTime * _zoomSpeed);
+    }
+    public float GetCameraHeight()
+    {
+        return _targetFollowOffset.y;
     }
 }

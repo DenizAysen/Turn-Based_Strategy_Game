@@ -8,13 +8,25 @@ public class GrenadeAction : BaseAction
     private GridPosition _offsetGridPos;
     private int _maxThrowDistance = 7;
 
+    public event EventHandler<OnGrenadeEventArgs> OnGrenadeActionStarted;
+    public event EventHandler OnGrenadeActionCompleted;
+    public class OnGrenadeEventArgs : EventArgs
+    {
+        public GridPosition targetGridPosition;
+        public Action onGrenadeBehaviourComplete;
+    }
+
     [SerializeField]private Transform grenadeProjectilePrefab;
+    private Vector3 _targetPosition;
+    private Vector3 _throwDirection;
     private void Update()
     {
         if (!_isActive)
         {
             return;
         }
+        _throwDirection = (_targetPosition - _unit.GetWorldPosition()).normalized;
+        transform.forward = Vector3.Slerp(transform.forward, _throwDirection, 10 * Time.deltaTime);
     }
     public override string GetActionName()
     {
@@ -54,13 +66,16 @@ public class GrenadeAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        Transform grenadeProjectileTrnasform = Instantiate(grenadeProjectilePrefab, _unit.GetWorldPosition(), Quaternion.identity);
-        GrenadeProjectile grenadeProjectile = grenadeProjectileTrnasform.GetComponent<GrenadeProjectile>();
-        grenadeProjectile.Setup(gridPosition, OnGrenadeBehaviourComplete);
+        //Transform grenadeProjectileTrnasform = Instantiate(grenadeProjectilePrefab, _unit.GetWorldPosition(), Quaternion.identity);
+        //GrenadeProjectile grenadeProjectile = grenadeProjectileTrnasform.GetComponent<GrenadeProjectile>();
+        //grenadeProjectile.Setup(gridPosition, OnGrenadeBehaviourComplete);
+        _targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+        OnGrenadeActionStarted?.Invoke(this, new OnGrenadeEventArgs { targetGridPosition = gridPosition, onGrenadeBehaviourComplete = OnGrenadeBehaviourComplete});
         ActionStart(onActionComplete);
     }
     private void OnGrenadeBehaviourComplete()
     {
+        OnGrenadeActionCompleted?.Invoke(this, EventArgs.Empty);
         ActionComplete();
     }
 }

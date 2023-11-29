@@ -5,11 +5,18 @@ using UnityEngine;
 
 public class UnitAnimator : MonoBehaviour
 {
+    #region SerializedFields
     [SerializeField] private Animator animator;
     [SerializeField] private Transform bulletProjectilePrefab;
+    [SerializeField] private Transform grenadeProjectilePrefab;
     [SerializeField] private Transform shootPointTransform;
+    [SerializeField] private Transform grenadeSpawnPointTransform;
+    [SerializeField] private Transform unitRightHand;
     [SerializeField] private Transform rifleTransform;
+    [SerializeField] private Transform leftHandRifleTransform;
     [SerializeField] private Transform swordTransform;
+    #endregion
+    private Transform grenadeTransform;
     private void Awake()
     {
         if(TryGetComponent<MoveAction>(out MoveAction moveAction))
@@ -27,6 +34,26 @@ public class UnitAnimator : MonoBehaviour
             swordAction.OnSwordActionStarted += OnSwordActionStarted;
             swordAction.OnSwordActionCompleted += OnSwordActionCompleted;
         }
+        if (TryGetComponent<GrenadeAction>(out GrenadeAction grenadeAction))
+        {
+            grenadeAction.OnGrenadeActionStarted += OnGrenadeActionStarted;
+            grenadeAction.OnGrenadeActionCompleted += OnGrenadeActionCompleted;
+        }
+    }
+
+    private void OnGrenadeActionCompleted(object sender, EventArgs e)
+    {
+        ReEquipRifle();
+    }
+
+    private void OnGrenadeActionStarted(object sender, GrenadeAction.OnGrenadeEventArgs e)
+    {
+        EquipGrenade();
+        grenadeTransform = Instantiate(grenadeProjectilePrefab, grenadeSpawnPointTransform.position, Quaternion.identity, unitRightHand);
+        grenadeTransform.localScale = Vector3.one * 65;
+        GrenadeProjectile grenadeProjectile = grenadeTransform.GetComponent<GrenadeProjectile>();
+        grenadeProjectile.Setup(e.targetGridPosition, e.onGrenadeBehaviourComplete);
+        animator.SetTrigger("TossGrenade");
     }
 
     private void OnChangedFloorsStarted(object sender, MoveAction.OnChangeFloorsStartedEventArg e)
@@ -89,5 +116,20 @@ public class UnitAnimator : MonoBehaviour
     {
         rifleTransform.gameObject.SetActive(true);
         swordTransform.gameObject.SetActive(false);
+    }
+    private void EquipGrenade()
+    {
+        rifleTransform.gameObject.SetActive(false);
+        leftHandRifleTransform.gameObject.SetActive(true);
+    }
+    private void ReEquipRifle()
+    {
+        rifleTransform.gameObject.SetActive(true);
+        leftHandRifleTransform.gameObject.SetActive(false);
+    }
+    public void UnEquipGrenade()
+    {
+        grenadeTransform.SetParent(null);
+        grenadeTransform.GetComponent<GrenadeProjectile>().EnableProjectileMovement();
     }
 }

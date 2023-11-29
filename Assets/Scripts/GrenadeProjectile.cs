@@ -11,6 +11,7 @@ public class GrenadeProjectile : MonoBehaviour
     [SerializeField] private Transform grenadeExplodeVfxPrefab;
     [SerializeField] private TrailRenderer trailRenderer;
     [SerializeField] private AnimationCurve arcYAnimationCurve;
+    [SerializeField] private bool canMove;
     #endregion
 
     #region Privates
@@ -26,6 +27,9 @@ public class GrenadeProjectile : MonoBehaviour
     #endregion
     private void Update()
     {
+        if (!canMove)
+            return;
+
         _moveDir = (_targetPositon - _positionXZ).normalized;
 
         _positionXZ += _moveDir * _moveSpeed * Time.deltaTime;
@@ -66,5 +70,9 @@ public class GrenadeProjectile : MonoBehaviour
         _positionXZ = transform.position;
         _positionXZ.y = 0;
         _totalDistance = Vector3.Distance(_positionXZ, _targetPositon);
+    }
+    public void EnableProjectileMovement()
+    {
+        canMove = true;
     }
 }

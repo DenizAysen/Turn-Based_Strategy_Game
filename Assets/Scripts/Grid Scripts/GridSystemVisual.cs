@@ -35,7 +35,8 @@ public class GridSystemVisual : MonoBehaviour
 
     #region Serialized Fields
     [SerializeField] private List<GridVisualTypeMaterial> gridVisualTypeMaterialList;
-    [SerializeField] private Transform gridSystemVisualSinglePrefab; 
+    [SerializeField] private Transform gridSystemVisualSinglePrefab;
+    [SerializeField] private Transform gridSystemVisualSingleParent;
     #endregion
 
     private GridSystemVisualSingle[,,] gridSystemVisualSingleArray;
@@ -51,7 +52,8 @@ public class GridSystemVisual : MonoBehaviour
                 for (int floor = 0; floor < LevelGrid.Instance.GetFloorAmount(); floor++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z, floor);
-                    Transform gridSystemVisualSingleTransform = Instantiate(gridSystemVisualSinglePrefab, LevelGrid.Instance.GetWorldPosition(gridPosition), Quaternion.identity);
+                    Transform gridSystemVisualSingleTransform = Instantiate(gridSystemVisualSinglePrefab, LevelGrid.Instance.GetWorldPosition(gridPosition),
+                        Quaternion.identity, gridSystemVisualSingleParent);
 
                     gridSystemVisualSingleArray[x, z,floor] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
                 }               
@@ -64,8 +66,15 @@ public class GridSystemVisual : MonoBehaviour
     private void SubscribeEvents()
     {
         UnitActionSystem.Instance.OnSelectedActionChanged += OnSelectedActionChanged;
-        LevelGrid.Instance.OnAnyUnitMovedGridPosition += OnAnyUnitMovedGridPosition;
+        UnitActionSystem.Instance.OnBusyChanged += OnBusyChanged;
+        //LevelGrid.Instance.OnAnyUnitMovedGridPosition += OnAnyUnitMovedGridPosition;
     }
+
+    private void OnBusyChanged(object sender, bool e)
+    {
+        UpdateGridVisual();
+    }
+
     private void OnAnyUnitMovedGridPosition(object sender, EventArgs e)
     {
         UpdateGridVisual();
